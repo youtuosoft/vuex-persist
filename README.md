@@ -79,13 +79,13 @@ Cookies or localStorage.
 ### Vue CLI Build Setup (using Webpack or some bundler)
 
 ```shell
-npm install --save vuex-persist
+npm install --save @youtuosoft/vuex-persist
 ```
 
 or
 
 ```shell
-yarn add vuex-persist
+yarn add @youtuosoft/vuex-persist
 ```
 
 ### Transpile for `target: es5`
@@ -451,7 +451,7 @@ const router = new Router({
 })
 
 const waitForStorageToBeReady = async (to, from, next) => {
-  await store.restored
+  await Promise.all(store.restored)
   next()
 }
 router.beforeEach(waitForStorageToBeReady)

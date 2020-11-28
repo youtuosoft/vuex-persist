@@ -47,7 +47,7 @@ export class VuexPersistence<S> implements PersistOptions<S> {
    * Vuex plugin.
    * @param {PersistOptions} options
    */
-  public constructor(options?: PersistOptions<S>) {
+  public constructor (options?: PersistOptions<S>) {
     if (typeof options === 'undefined') options = {} as PersistOptions<S>
     this.key = ((options.key != null) ? options.key : 'vuex')
 
@@ -72,10 +72,7 @@ export class VuexPersistence<S> implements PersistOptions<S> {
      * 3. Finally, try to use MockStorage
      * 4. None of above? Well we gotta fail.
      */
-    if (options.storage) { this.storage = options.storage }
-    else if (localStorageLitmus) { this.storage = window.localStorage }
-    else if (MockStorage) { this.storage = new MockStorage() }
-    else { throw new Error("Neither 'window' is defined, nor 'MockStorage' is available") }
+    if (options.storage) { this.storage = options.storage } else if (localStorageLitmus) { this.storage = window.localStorage } else if (MockStorage) { this.storage = new MockStorage() } else { throw new Error('Neither \'window\' is defined, nor \'MockStorage\' is available') }
 
     /**
      * How this works is -
@@ -104,7 +101,7 @@ export class VuexPersistence<S> implements PersistOptions<S> {
 
     this.strictMode = options.strictMode || false
 
-    this.RESTORE_MUTATION = function RESTORE_MUTATION(state: S, savedState: any) {
+    this.RESTORE_MUTATION = function RESTORE_MUTATION (state: S, savedState: any) {
       const mergedState = merge(state, savedState || {}, this.mergeOption)
       for (const propertyName of Object.keys(mergedState as {})) {
         (this as any)._vm.$set(state, propertyName, (mergedState as any)[propertyName])
@@ -124,16 +121,16 @@ export class VuexPersistence<S> implements PersistOptions<S> {
         (options.restoreState != null)
           ? options.restoreState
           : ((key: string, storage: AsyncStorage) =>
-            (storage).getItem(key)
-              .then((value) =>
-                typeof value === 'string' // If string, parse, or else, just return
-                  ? (
-                    this.supportCircular
-                      ? FlattedJSON.parse(value || '{}')
-                      : JSON.parse(value || '{}')
-                  )
-                  : (value || {})
-              )
+              (storage).getItem(key)
+                .then((value) =>
+                  typeof value === 'string' // If string, parse, or else, just return
+                    ? (
+                      this.supportCircular
+                        ? FlattedJSON.parse(value || '{}')
+                        : JSON.parse(value || '{}')
+                    )
+                    : (value || {})
+                )
           )
       )
 
@@ -146,18 +143,18 @@ export class VuexPersistence<S> implements PersistOptions<S> {
         (options.saveState != null)
           ? options.saveState
           : ((key: string, state: {}, storage: AsyncStorage) =>
-            (storage).setItem(
-              key, // Second argument is state _object_ if asyc storage, stringified otherwise
-              // do not stringify the state if the storage type is async
-              (this.asyncStorage
-                ? merge({}, state || {}, this.mergeOption)
-                : (
-                  this.supportCircular
-                    ? FlattedJSON.stringify(state) as any
-                    : JSON.stringify(state) as any
+              (storage).setItem(
+                key, // Second argument is state _object_ if asyc storage, stringified otherwise
+                // do not stringify the state if the storage type is async
+                (this.asyncStorage
+                    ? merge({}, state || {}, this.mergeOption)
+                    : (
+                      this.supportCircular
+                        ? FlattedJSON.stringify(state) as any
+                        : JSON.stringify(state) as any
+                    )
                 )
               )
-            )
           )
       )
 
@@ -175,7 +172,8 @@ export class VuexPersistence<S> implements PersistOptions<S> {
          * See https://github.com/championswimmer/vuex-persist/pull/118#issuecomment-500914963
          * @since 2.1.0
          */
-        (store as any).restored = ((this.restoreState(this.key, this.storage)) as Promise<S>).then((savedState) => {
+        (store as any).restored = (store as any).restored || [];
+        (store as any).restored.push(((this.restoreState(this.key, this.storage)) as Promise<S>).then((savedState) => {
           /**
            * If in strict mode, do only via mutation
            */
@@ -192,7 +190,7 @@ export class VuexPersistence<S> implements PersistOptions<S> {
             }
           })
           this.subscribed = true
-        })
+        }))
       }
     } else {
 
@@ -227,14 +225,14 @@ export class VuexPersistence<S> implements PersistOptions<S> {
         (options.saveState != null)
           ? options.saveState
           : ((key: string, state: {}, storage: Storage) =>
-            (storage).setItem(
-              key, // Second argument is state _object_ if localforage, stringified otherwise
-              (
-                this.supportCircular
-                  ? FlattedJSON.stringify(state) as any
-                  : JSON.stringify(state) as any
+              (storage).setItem(
+                key, // Second argument is state _object_ if localforage, stringified otherwise
+                (
+                  this.supportCircular
+                    ? FlattedJSON.stringify(state) as any
+                    : JSON.stringify(state) as any
+                )
               )
-            )
           )
       )
 
