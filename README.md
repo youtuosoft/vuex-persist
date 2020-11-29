@@ -269,7 +269,7 @@ Quick example -
 ```typescript
 import Vue from 'vue'
 import Vuex from 'vuex'
-import VuexPersistence from 'vuex-persist'
+import VuexPersistence from '@youtuosoft/vuex-persist'
 
 Vue.use(Vuex)
 
@@ -353,7 +353,7 @@ To configure with strict mode support -
 ```typescript
 import Vue from 'vue'
 import Vuex, { Payload, Store } from 'vuex'
-import VuexPersistence from 'vuex-persist'
+import VuexPersistence from '@youtuosoft/vuex-persist'
 
 const vuexPersist = new VuexPersistence<any, any>({
   strictMode: true, // This **MUST** be set to true
